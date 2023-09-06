@@ -1,0 +1,25 @@
+
+CREATE TABLE passengers (
+	id serial PRIMARY KEY,
+	"firstName" VARCHAR(100) NOT NULL,
+	"lastName" VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE cities (
+	id serial PRIMARY KEY,
+	name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE flights (
+	id serial PRIMARY KEY,
+	origin integer NOT NULL REFERENCES "cities"("id"),
+	destination integer NOT NULL REFERENCES "cities"("id"),
+	date DATE NOT NULL,
+	CHECK (origin <> destination)
+);
+
+CREATE TABLE travels (
+	id serial PRIMARY KEY,
+	"passengerId" integer NOT NULL REFERENCES "passengers"("id"),
+	"flightId" integer NOT NULL REFERENCES "flights"("id")
+);
