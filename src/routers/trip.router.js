@@ -11,4 +11,5 @@ tripRouter.get("/",(req,res)=>{
 });
 tripRouter.post("/cities",validateSchema(citySchema),tripsController.registerCity);
 tripRouter.post("/flights",validateSchema(flightSchema),tripsController.registerFlight);
+tripRouter.get("/flights",tripsController.getFlights)
 export default tripRouter;

@@ -1,6 +1,6 @@
 import joi from "joi";
 
 export const travelSchema = joi.object({
-	passengerId: joi.integer().required(),
-	flightId: joi.integer().required()    
+	passengerId: joi.number().integer().positive().required(),
+	flightId: joi.number().integer().positive().required()    
 });

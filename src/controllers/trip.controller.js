@@ -16,4 +16,10 @@ async function registerFlight(req,res){
     return res.send(resp).status(201);
 }
 
-export const tripsController = {registerCity,registerFlight};
+async function getFlights(req, res){
+    const {origin,destination, biggerDate, smallerDate} = req.query;
+    const flights = await tripServices.selectFlights(origin,destination,biggerDate,smallerDate);
+    return res.send(flights);
+}
+
+export const tripsController = {registerCity,registerFlight,getFlights};

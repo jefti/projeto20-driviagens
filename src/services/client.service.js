@@ -1,6 +1,7 @@
-import { checkPassengerDB, createPassengerDB } from "../repositories/client.repository.js";
+import { CreateTravelDB, checkDuplicateTravel, checkFlightExists, checkPassengerDB, checkPassengerExists, createPassengerDB } from "../repositories/client.repository.js";
 import { conflictError } from "../errors/conflict.error.js";
 import { internalServerError } from "../errors/internalServerError.js";
+import { notFoundError } from "../errors/notFound.error.js";
 
 async function createClient(firstName, lastName){
     const checkDuplicate = await checkPassengerDB(firstName, lastName);
@@ -12,4 +13,15 @@ async function createClient(firstName, lastName){
     return `Passageiro ${firstName} ${lastName} criado com sucesso! id: ${id}.`;
 }
 
-export const clientServices = {createClient};
+async function createTravel(passengerId,flightId){
+    const checkPassenger = await checkPassengerExists(passengerId);
+        if(!checkPassenger[0]) throw notFoundError("Passageiro");
+    const checkFlight = await checkFlightExists(flightId);
+        if(!checkFlight[0]) throw notFoundError("Voo");
+    const checkDuplicate = await checkDuplicateTravel(passengerId,flightId);
+        if(checkDuplicate[0]) throw conflictError("Viagem");
+    const createdId = await CreateTravelDB(passengerId,flightId);
+    return (`Registro do passageiro ${checkPassenger[0].firstName} ${checkPassenger[0].lastName} no voo ${checkFlight[0].id} realizado com sucesso!`);
+}
+
+export const clientServices = {createClient, createTravel};

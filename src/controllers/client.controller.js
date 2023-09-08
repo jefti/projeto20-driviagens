@@ -7,4 +7,10 @@ async function registerPassenger(req,res){
     return res.status(httpStatus.CREATED).send(resposta);
 }
 
-export const clientController = {registerPassenger};
+async function registerTravel(req,res){
+    const {passengerId,flightId} = req.body;
+    const mensagem = await clientServices.createTravel(passengerId,flightId);
+    return res.status(httpStatus.CREATED).send(mensagem);
+}
+
+export const clientController = {registerPassenger,registerTravel};

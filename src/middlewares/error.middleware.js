@@ -14,5 +14,8 @@ export async function errorHandler(error, req, res, next){
     if (error.type === httpStatus.NOT_FOUND) {
         return res.status(httpStatus.NOT_FOUND).send(error.message);
     }
+    if (error.type === httpStatus.BAD_REQUEST) {
+        return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("Sorry, something went wrong");
 }
