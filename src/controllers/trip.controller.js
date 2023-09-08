@@ -18,7 +18,9 @@ async function registerFlight(req,res){
 }
 
 async function getFlights(req, res){
-    const {origin,destination, biggerDate, smallerDate, page} = req.query;
+    const {origin,destination, page} = req.query;
+    const biggerDate = req.query['bigger-date'];
+    const smallerDate = req.query['smaller-date'];
     let validatedPage = 0;
     if(page) validatedPage = clientServices.validatePage(page);
     const flights = await tripServices.selectFlights(origin,destination,biggerDate,smallerDate,validatedPage);
