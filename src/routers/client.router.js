@@ -8,5 +8,6 @@ const clientRouter = Router();
 
 clientRouter.post("/passengers",validateSchema(passengerSchema),clientController.registerPassenger);
 clientRouter.post("/travels",validateSchema(travelSchema),clientController.registerTravel);
+clientRouter.get("/passengers/travels",clientController.getPassengersTravels)
 
 export default clientRouter;

@@ -13,4 +13,10 @@ async function registerTravel(req,res){
     return res.status(httpStatus.CREATED).send(mensagem);
 }
 
-export const clientController = {registerPassenger,registerTravel};
+async function getPassengersTravels(req,res){
+    const {name} = req.query;
+    const respList = await clientServices.selectPassengersTravels(name);
+    return res.send(respList);
+}
+
+export const clientController = {registerPassenger,registerTravel,getPassengersTravels};

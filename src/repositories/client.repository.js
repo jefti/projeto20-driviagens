@@ -30,3 +30,25 @@ export async function CreateTravelDB(passengerId,flightId){
     const createdId = await db.query(`INSERT INTO travels ("passengerId","flightId") VALUES ($1,$2) RETURNING id;`,[passengerId,flightId]);
     return createdId.rows[0];
 }
+
+export async function SelectPassengersTravelsDB(name){
+    let query = `
+    SELECT
+	    p."firstName" || ' ' || p."lastName" AS "passenger",
+	    COUNT(t."passengerId") AS travels
+    FROM passengers AS p
+    JOIN travels t ON t."passengerId" = p.id
+    `
+    let queryComplement = `
+    GROUP BY p.id
+    ORDER BY travels DESC
+    LIMIT 10;
+    `
+    let values = [];
+    if(name){
+        values.push(`%${name}%`);
+        query+=`WHERE p."firstName" LIKE $${values.length} OR p."lastName" LIKE $${values.length}`
+    }
+    const select = await db.query(query+queryComplement, values);
+    return select.rows;
+}
