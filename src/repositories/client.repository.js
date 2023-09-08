@@ -31,7 +31,7 @@ export async function CreateTravelDB(passengerId,flightId){
     return createdId.rows[0];
 }
 
-export async function SelectPassengersTravelsDB(name){
+export async function SelectPassengersTravelsDB(name,page){
     let query = `
     SELECT
 	    p."firstName" || ' ' || p."lastName" AS "passenger",
@@ -48,6 +48,15 @@ export async function SelectPassengersTravelsDB(name){
     if(name){
         values.push(`%${name}%`);
         query+=`WHERE p."firstName" LIKE $${values.length} OR p."lastName" LIKE $${values.length}`
+    }
+    if(page){
+        const offset = (page-1)*10;
+        values.push(offset);
+        queryComplement=`
+        GROUP BY p.id
+        ORDER BY travels DESC
+        LIMIT 10 OFFSET $${values.length};
+        `;
     }
     const select = await db.query(query+queryComplement, values);
     return select.rows;

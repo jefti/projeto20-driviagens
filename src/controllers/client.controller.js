@@ -14,8 +14,10 @@ async function registerTravel(req,res){
 }
 
 async function getPassengersTravels(req,res){
-    const {name} = req.query;
-    const respList = await clientServices.selectPassengersTravels(name);
+    const {name,page} = req.query;
+    let validatedPage = 1;
+    if(page) validatedPage = clientServices.validatePage(page);
+    const respList = await clientServices.selectPassengersTravels(name,validatedPage);
     return res.send(respList);
 }
 

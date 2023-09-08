@@ -46,11 +46,11 @@ async function createFlight(origin, destination,date){
     return `Voo ${id} criada com sucesso.`;
 }
 
-async function selectFlights(origin,destination,biggerDate,smallerDate){
+async function selectFlights(origin,destination,biggerDate,smallerDate, page){
     if((biggerDate && !smallerDate)||(!biggerDate && smallerDate)) throw unprocessableEntityError("Informar apenas um filtro de data");
     let filtros = {};
     if(biggerDate && smallerDate ) filtros = validateFilters(biggerDate,smallerDate);
-    const select = await selectFlightsDB(origin,destination,filtros);
+    const select = await selectFlightsDB(origin,destination,filtros,page);
     const flights = select.map((e)=>{return formatResponse(e)});
     return flights;
 }

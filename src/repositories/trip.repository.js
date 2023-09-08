@@ -20,7 +20,7 @@ export async function createFlightDB(origin, destination,date){
     return createdId.rows[0].id;
 }
 
-export async function selectFlightsDB(origin,destination,filtros){
+export async function selectFlightsDB(origin,destination,filtros,page){
     let query = `
     SELECT
         f.id AS id,
@@ -47,6 +47,11 @@ export async function selectFlightsDB(origin,destination,filtros){
         values.push(filtros.fim);
         query+= ` AND date < $${values.length}`;
 
+    }
+    if(page>0){
+        const offset = (page-1)*10;
+        values.push(offset);
+        queryComplement = ` ORDER BY date LIMIT 10 OFFSET $${values.length};`
     }
     const select = await db.query(query+queryComplement, values);
     return select.rows;

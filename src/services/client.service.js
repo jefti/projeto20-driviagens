@@ -2,6 +2,7 @@ import { CreateTravelDB, SelectPassengersTravelsDB, checkDuplicateTravel, checkF
 import { conflictError } from "../errors/conflict.error.js";
 import { internalServerError } from "../errors/internalServerError.js";
 import { notFoundError } from "../errors/notFound.error.js";
+import { badRequestError } from "../errors/badRequest.error.js";
 
 async function createClient(firstName, lastName){
     const checkDuplicate = await checkPassengerDB(firstName, lastName);
@@ -24,8 +25,15 @@ async function createTravel(passengerId,flightId){
     return (`Registro do passageiro ${checkPassenger[0].firstName} ${checkPassenger[0].lastName} no voo ${checkFlight[0].id} realizado com sucesso!`);
 }
 
-async function selectPassengersTravels(name){
-    const selectList = await SelectPassengersTravelsDB(name);
+async function selectPassengersTravels(name,validatedPage){
+    const selectList = await SelectPassengersTravelsDB(name,validatedPage);
     return selectList;
 }
-export const clientServices = {createClient, createTravel,selectPassengersTravels};
+ function validatePage(page){
+    const pageTest = parseInt(page);
+    if (isNaN(pageTest) || pageTest <= 0) {
+        throw badRequestError("Valor de page informado");
+    }
+    return pageTest;
+}
+export const clientServices = {createClient, createTravel,selectPassengersTravels,validatePage};
